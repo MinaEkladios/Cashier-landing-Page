@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Cashier Manager App – نظام الكاشير الاحترافي لويندوز</title>
+  <meta name="description" content="نظام كاشير احترافي لإدارة السوبر ماركت والصيدليات والمحلات التجارية على ويندوز – أوفلاين بالكامل">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (utility fallback) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* ════════════════════════════════════════════
+       DESIGN TOKENS  –  Blue Sophistication
+    ════════════════════════════════════════════ */
+    :root {
+      /* Backgrounds */
+      --bg-1: #03102e;
+      --bg-2: #080f22;
+      --surface-0: #030b1e;
+      --surface-1: #0c1637;
+      --surface-2: #091230;
+      --surface-3: #142055;
+      --surface-card: #0d1840;
+
+      /* Accents */
+      --blue:    #4a90e2;
+      --blue-lt: #6aabf7;
+      --teal:    #2dd4bf;
+      --amber:   #f59e0b;
+      --green:   #22c55e;
+      --purple:  #a78bfa;
+      --red:     #f87171;
+
+      /* Text */
+      --tx-1: #dde6f5;
+      --tx-2: #8fa9cc;
+      --tx-3: #4a6180;
+
+      /* Borders */
+      --b-faint:  rgba(74,144,226,.08);
+      --b-light:  rgba(74,144,226,.18);
+      --b-medium: rgba(74,144,226,.32);
+
+      /* Shadows */
+      --s-card:   0 20px 60px rgba(0,0,0,.55), 0 0 40px rgba(74,144,226,.07);
+      --s-convex: 12px 12px 28px rgba(0,0,0,.8), -4px -4px 16px rgba(255,255,255,.025),
+                  inset 1px 1px 0 rgba(255,255,255,.07);
+      --s-concave:inset 8px 8px 20px rgba(0,0,0,.85), inset -2px -2px 10px rgba(255,255,255,.02);
+      --s-btn:    0 4px 20px rgba(74,144,226,.4);
+      --s-btn-h:  0 8px 30px rgba(74,144,226,.6);
+
+      /* Radii */
+      --r-card: 28px;
+      --r-btn:  14px;
+      --r-pill: 999px;
+
+      /* Fonts */
+      --ff-ar: 'Cairo', sans-serif;
+      --ff-en: 'Inter',  sans-serif;
+
+      /* Noise */
+      --noise-op: .028;
+    }
+
+    /* ════ Reset & Base ════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      color: var(--tx-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Noise texture */
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      opacity: var(--noise-op);
+      pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Ambient glow orbs */
+    .orb {
+      position: fixed; border-radius: 50%;
+      pointer-events: none; z-index: 0; filter: blur(90px); opacity: .13;
+    }
+    .orb-a { width: 700px; height: 700px; background: radial-gradient(circle, #4a90e2, transparent); top:-220px; right:-220px; }
+    .orb-b { width: 450px; height: 450px; background: radial-gradient(circle, #2dd4bf, transparent); bottom:5%; left:-160px; }
+    .orb-c { width: 350px; height: 350px; background: radial-gradient(circle, #7c3aed, transparent); top:55%; right:5%; }
+
+    /* Typography */
+    [dir="rtl"] { font-family: var(--ff-ar); }
+    [dir="ltr"] { font-family: var(--ff-en); }
+
+    /* ════ Layout ════ */
+    section, header, footer { position: relative; z-index: 1; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+    /* ════════════════════════════════════════════
+       NAVBAR
+    ════════════════════════════════════════════ */
+    .navbar {
+      position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 40px); max-width: 1160px; z-index: 200;
+      background: rgba(9,18,48,.82);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--b-light);
+      border-radius: var(--r-pill);
+      padding: 10px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      box-shadow: var(--s-card);
+      transition: top .3s, background .3s;
+    }
+    .navbar.scrolled { top: 8px; background: rgba(6,12,36,.95); }
+
+    .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+    .logo-icon {
+      width:38px; height:38px; border-radius:11px;
+      background: linear-gradient(135deg, #4a90e2, #2dd4bf);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:800; font-size:13px;
+      font-family:var(--ff-en); letter-spacing:-.5px;
+      box-shadow:0 0 22px rgba(74,144,226,.45);
+    }
+    .logo-text { font-weight:700; font-size:16px; color:var(--tx-1); font-family:var(--ff-en); white-space:nowrap; }
+
+    .nav-links { display:flex; align-items:center; gap:2px; }
+    .nav-link {
+      padding:7px 15px; border-radius:var(--r-pill); font-size:13px; font-weight:500;
+      color:var(--tx-2); text-decoration:none; transition:all .2s; white-space:nowrap;
+    }
+    .nav-link:hover { color:var(--tx-1); background:rgba(74,144,226,.12); }
+
+    .nav-end { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+    /* Lang toggle */
+    .lang-toggle {
+      display:flex; align-items:center; gap:3px;
+      background:var(--surface-1); border:1px solid var(--b-light);
+      border-radius:var(--r-pill); padding:4px; box-shadow:var(--s-concave);
+    }
+    .lang-btn {
+      padding:5px 14px; border-radius:var(--r-pill);
+      font-size:12px; font-weight:700; cursor:pointer;
+      transition:all .3s; border:none; background:transparent;
+      color:var(--tx-3); font-family:var(--ff-en);
+    }
+    .lang-btn.active {
+      background:linear-gradient(135deg,#4a90e2,#3b82f6);
+      color:#fff; box-shadow:0 0 16px rgba(74,144,226,.55);
+    }
+
+    /* Buttons */
+    .btn-cta {
+      background:linear-gradient(135deg,#4a90e2,#3b82f6);
+      color:#fff; padding:10px 20px; border-radius:var(--r-pill);
+      font-size:13px; font-weight:700; border:none; cursor:pointer;
+      text-decoration:none; transition:all .3s; box-shadow:var(--s-btn);
+      white-space:nowrap; display:inline-flex; align-items:center; gap:6px;
+    }
+    .btn-cta:hover { transform:translateY(-2px); box-shadow:var(--s-btn-h); }
+
+    .btn-outline {
+      background:transparent; color:var(--tx-1);
+      padding:10px 20px; border-radius:var(--r-pill); font-size:13px; font-weight:600;
+      border:1px solid var(--b-medium); cursor:pointer; text-decoration:none;
+      transition:all .3s; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;
+    }
+    .btn-outline:hover { background:rgba(74,144,226,.1); border-color:rgba(74,144,226,.5); }
+
+    /* Mobile menu btn */
+    .nav-hamburger {
+      display:none; flex-direction:column; gap:5px;
+      background:none; border:none; cursor:pointer; padding:6px;
+    }
+    .nav-hamburger span {
+      display:block; width:22px; height:2px;
+      background:var(--tx-2); border-radius:2px; transition:all .3s;
+    }
+
+    /* Mobile nav dropdown */
+    .nav-mobile-menu {
+      display:none; position:fixed;
+      top:78px; left:20px; right:20px;
+      background:rgba(9,18,48,.97);
+      backdrop-filter:blur(20px); border:1px solid var(--b-light);
+      border-radius:24px; padding:20px; z-index:199;
+      box-shadow:var(--s-card);
+      flex-direction:column; gap:4px;
+    }
+    .nav-mobile-menu.open { display:flex; }
+    .nav-mobile-link {
+      padding:12px 16px; border-radius:14px;
+      font-size:15px; font-weight:500; color:var(--tx-2);
+      text-decoration:none; transition:all .2s;
+    }
+    .nav-mobile-link:hover { color:var(--tx-1); background:rgba(74,144,226,.12); }
+
+    /* ════════════════════════════════════════════
+       HERO
+    ════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 0 80px;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1.05fr;
+      gap: 64px; align-items: center;
+    }
+
+    /* Badge pill */
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 16px; border-radius:var(--r-pill);
+      background:rgba(74,144,226,.1); border:1px solid rgba(74,144,226,.28);
+      font-size:12px; font-weight:600; color:var(--blue-lt); margin-bottom:24px;
+    }
+    .pulse-dot {
+      width:8px; height:8px; background:var(--green); border-radius:50%;
+      animation:pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+    .hero-title {
+      font-size:clamp(38px,5.5vw,62px); font-weight:900; line-height:1.12;
+      letter-spacing:-.03em; margin-bottom:22px; color:var(--tx-1);
+    }
+    .hero-title .grad {
+      background:linear-gradient(135deg,#4a90e2 0%,#2dd4bf 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-desc {
+      font-size:17px; color:var(--tx-2); line-height:1.85; margin-bottom:36px;
+      max-width:530px;
+    }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:36px; }
+
+    .hero-trust { display:flex; flex-wrap:wrap; gap:18px; }
+    .trust-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--tx-2); }
+    .trust-check {
+      width:19px; height:19px; border-radius:50%;
+      background:rgba(45,212,191,.12); border:1px solid rgba(45,212,191,.35);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .trust-check svg { width:10px; height:10px; stroke:var(--teal); fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* Hero image */
+    .hero-img-wrap { position:relative; }
+    .hero-img-glow {
+      position:absolute; inset:-24px; border-radius:50px;
+      background:radial-gradient(circle at 50% 50%,rgba(74,144,226,.18),transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+    .hero-screen {
+      position:relative; z-index:1;
+      background:var(--surface-1); border-radius:22px;
+      border:1px solid var(--b-medium);
+      box-shadow:var(--s-card), 0 0 70px rgba(74,144,226,.14);
+      overflow:hidden;
+    }
+    .screen-titlebar {
+      padding:11px 16px; background:var(--surface-2);
+      display:flex; align-items:center; gap:7px;
+      border-bottom:1px solid var(--b-faint);
+    }
+    .win-btn { width:11px; height:11px; border-radius:50%; }
+    .wb-red{background:#ef4444} .wb-amber{background:#f59e0b} .wb-green{background:#22c55e}
+    .screen-title-text { font-size:11px; color:var(--tx-3); font-family:var(--ff-en); margin-inline-start:8px; }
+    .hero-screen img { width:100%; display:block; }
+
+    /* Floating stat cards */
+    .float-card {
+      position:absolute; z-index:2;
+      background:rgba(9,18,48,.92); backdrop-filter:blur(12px);
+      border:1px solid var(--b-medium); border-radius:18px;
+      padding:10px 16px; box-shadow:var(--s-card);
+    }
+    .fc-label { font-size:10px; color:var(--tx-3); letter-spacing:.07em; text-transform:uppercase; font-family:var(--ff-en); }
+    .fc-value { font-size:18px; font-weight:800; font-family:var(--ff-en); line-height:1.1; margin-top:2px; }
+
+    .fc-tl { top:-14px; inset-inline-end:-22px; }
+    .fc-br { bottom:-18px; inset-inline-start:-22px; }
+
+    .float-anim { animation:float 5.5s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+    /* ════════════════════════════════════════════
+       STATS BAR
+    ════════════════════════════════════════════ */
+    .stats-bar {
+      padding:22px 0;
+      background:rgba(7,14,42,.6);
+      border-top:1px solid var(--b-faint); border-bottom:1px solid var(--b-faint);
+      backdrop-filter:blur(12px);
+    }
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); }
+    .stat-cell { text-align:center; padding:14px 10px; }
+    .stat-cell + .stat-cell { border-inline-start:1px solid var(--b-faint); }
+    .stat-num { font-size:26px; font-weight:800; color:var(--blue-lt); font-family:var(--ff-en); line-height:1; }
+    .stat-lbl { font-size:13px; color:var(--tx-2); margin-top:5px; }
+
+    /* ════════════════════════════════════════════
+       SECTION HEADER
+    ════════════════════════════════════════════ */
+    .sec-header { text-align:center; margin-bottom:56px; }
+    .sec-badge {
+      display:inline-block; padding:5px 18px; border-radius:var(--r-pill);
+      background:rgba(74,144,226,.1); border:1px solid rgba(74,144,226,.24);
+      font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--blue-lt); margin-bottom:18px;
+    }
+    .sec-title {
+      font-size:clamp(28px,4vw,44px); font-weight:800; line-height:1.2;
+      color:var(--tx-1); margin-bottom:16px;
+    }
+    .sec-desc { font-size:16px; color:var(--tx-2); max-width:600px; margin:0 auto; line-height:1.85; }
+
+    /* ════════════════════════════════════════════
+       FEATURES
+    ════════════════════════════════════════════ */
+    .features-sec { padding:100px 0; }
+    .features-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+
+    .feat-card {
+      background:var(--surface-card);
+      border:1px solid var(--b-faint);
+      border-radius:var(--r-card);
+      padding:32px; box-shadow:var(--s-convex);
+      transition:transform .3s, box-shadow .3s, border-color .3s;
+      position:relative; overflow:hidden;
+    }
+    .feat-card::after {
+      content:""; position:absolute;
+      top:0; inset-inline-start:0; inset-inline-end:0; height:3px;
+      background:linear-gradient(90deg,#4a90e2,#2dd4bf);
+      opacity:0; transition:opacity .3s;
+    }
+    .feat-card:hover { transform:translateY(-7px); box-shadow:var(--s-card),0 0 32px rgba(74,144,226,.1); border-color:var(--b-light); }
+    .feat-card:hover::after { opacity:1; }
+
+    .feat-icon {
+      width:52px; height:52px; border-radius:15px; font-size:22px;
+      display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+    }
+    .fi-blue   { background:rgba(74,144,226,.13); box-shadow:inset 0 0 0 1px rgba(74,144,226,.28); }
+    .fi-teal   { background:rgba(45,212,191,.12);  box-shadow:inset 0 0 0 1px rgba(45,212,191,.28); }
+    .fi-amber  { background:rgba(245,158,11,.12); box-shadow:inset 0 0 0 1px rgba(245,158,11,.28); }
+    .fi-purple { background:rgba(167,139,250,.12); box-shadow:inset 0 0 0 1px rgba(167,139,250,.28); }
+    .fi-red    { background:rgba(248,113,113,.12); box-shadow:inset 0 0 0 1px rgba(248,113,113,.28); }
+    .fi-green  { background:rgba(34,197,94,.12);  box-shadow:inset 0 0 0 1px rgba(34,197,94,.28); }
+
+    .feat-title { font-size:17px; font-weight:700; color:var(--tx-1); margin-bottom:10px; }
+    .feat-desc  { font-size:14px; color:var(--tx-2); line-height:1.8; }
+
+    /* ════════════════════════════════════════════
+       SHOWCASE
+    ════════════════════════════════════════════ */
+    .showcase-sec { padding:100px 0; }
+
+    .sc-tabs {
+      display:flex; gap:6px; flex-wrap:wrap; margin-bottom:36px;
+      background:rgba(7,14,42,.55); padding:5px; border-radius:var(--r-pill);
+      border:1px solid var(--b-faint); width:fit-content; margin-inline:auto;
+    }
+    .sc-tab {
+      padding:8px 20px; border-radius:var(--r-pill); font-size:13px; font-weight:600;
+      color:var(--tx-3); cursor:pointer; border:none; background:transparent;
+      transition:all .3s; white-space:nowrap;
+    }
+    .sc-tab.active { background:linear-gradient(135deg,#4a90e2,#3b82f6); color:#fff; box-shadow:0 0 20px rgba(74,144,226,.4); }
+    .sc-tab:hover:not(.active) { color:var(--tx-1); background:rgba(74,144,226,.1); }
+
+    .sc-frame {
+      border-radius:26px; background:var(--surface-1);
+      border:1px solid var(--b-medium);
+      box-shadow:var(--s-card), 0 0 80px rgba(74,144,226,.1);
+      overflow:hidden;
+    }
+    .sc-titlebar {
+      padding:12px 20px; background:var(--surface-2);
+      display:flex; align-items:center; gap:8px;
+      border-bottom:1px solid var(--b-faint);
+    }
+    .sc-win-title { font-size:11px; color:var(--tx-3); margin-inline-start:10px; font-family:var(--ff-en); }
+    #showcase-img { width:100%; display:block; transition:opacity .3s ease; }
+    .sc-caption {
+      padding:20px 28px; border-top:1px solid var(--b-faint);
+      display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap;
+    }
+    .sc-cap-title { font-size:17px; font-weight:700; color:var(--tx-1); margin-bottom:5px; }
+    .sc-cap-desc  { font-size:13px; color:var(--tx-2); line-height:1.65; max-width:560px; }
+    .req-tag {
+      display:inline-flex; align-items:center; gap:5px; padding:5px 13px;
+      background:rgba(74,144,226,.08); border:1px solid rgba(74,144,226,.16);
+      border-radius:var(--r-pill); font-size:11px; color:var(--tx-2); white-space:nowrap; font-family:var(--ff-en);
+    }
+
+    /* ════════════════════════════════════════════
+       PRICING
+    ════════════════════════════════════════════ */
+    .pricing-sec { padding:100px 0; }
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; align-items:start; }
+
+    .price-card {
+      background:var(--surface-card); border:1px solid var(--b-faint);
+      border-radius:var(--r-card); padding:36px; box-shadow:var(--s-convex);
+      transition:all .3s; position:relative;
+    }
+    .price-card.featured {
+      border-color:rgba(74,144,226,.5);
+      background:linear-gradient(160deg,#112060,#0a1540);
+      box-shadow:var(--s-card), 0 0 70px rgba(74,144,226,.18),
+                 inset 0 1px 0 rgba(74,144,226,.3);
+      transform:scale(1.04);
+    }
+    .price-badge {
+      position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+      background:linear-gradient(135deg,#4a90e2,#3b82f6);
+      color:#fff; font-size:11px; font-weight:700;
+      padding:5px 20px; border-radius:var(--r-pill); white-space:nowrap;
+      box-shadow:0 4px 20px rgba(74,144,226,.5); letter-spacing:.06em;
+    }
+    .price-plan  { font-size:12px; font-weight:700; color:var(--tx-3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; }
+    .price-val   { font-size:44px; font-weight:900; color:var(--tx-1); line-height:1; font-family:var(--ff-en); }
+    .price-curr  { font-size:18px; font-weight:600; color:var(--tx-2); vertical-align:super; margin-inline-end:4px; font-family:var(--ff-ar); }
+    .price-per   { font-size:13px; color:var(--tx-3); margin-top:6px; margin-bottom:24px; }
+    .price-div   { height:1px; background:var(--b-faint); margin:22px 0; }
+
+    .pf-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:13px; font-size:14px; color:var(--tx-2); line-height:1.5; }
+    .pf-icon { flex-shrink:0; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+    .pf-yes { background:rgba(34,197,94,.13); border:1px solid rgba(34,197,94,.3); }
+    .pf-yes svg { stroke:var(--green); width:10px; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+    .pf-no  { background:rgba(74,98,128,.1);  border:1px solid rgba(74,98,128,.22); }
+    .pf-no svg  { stroke:var(--tx-3); width:8px;  fill:none; stroke-width:2; stroke-linecap:round; }
+
+    .btn-block {
+      width:100%; padding:14px; border-radius:var(--r-btn);
+      font-size:15px; font-weight:700; cursor:pointer; transition:all .3s;
+      border:none; margin-top:22px;
+    }
+    .bb-primary { background:linear-gradient(135deg,#4a90e2,#3b82f6); color:#fff; box-shadow:var(--s-btn); }
+    .bb-primary:hover { transform:translateY(-2px); box-shadow:var(--s-btn-h); }
+    .bb-ghost   { background:transparent; color:var(--tx-1); border:1px solid var(--b-medium) !important; }
+    .bb-ghost:hover { background:rgba(74,144,226,.1); }
+
+    /* Trial note strip */
+    .trial-strip {
+      margin-top:36px; padding:18px 28px; text-align:center;
+      background:rgba(74,144,226,.05); border:1px solid rgba(74,144,226,.14);
+      border-radius:20px; font-size:14px; color:var(--tx-2);
+    }
+
+    /* ════════════════════════════════════════════
+       SYS REQUIREMENTS STRIP
+    ════════════════════════════════════════════ */
+    .sysreq-strip {
+      background:var(--surface-card); border:1px solid var(--b-faint);
+      border-radius:var(--r-card); padding:36px 44px; margin:60px 0;
+      display:flex; align-items:center; gap:44px; flex-wrap:wrap;
+      box-shadow:var(--s-convex);
+    }
+    .sysreq-text { flex:1; min-width:190px; }
+    .sysreq-label { font-size:11px; font-weight:700; color:var(--tx-3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+    .sysreq-title { font-size:22px; font-weight:800; color:var(--tx-1); margin-bottom:6px; }
+    .sysreq-desc  { font-size:14px; color:var(--tx-2); }
+    .sysreq-tags  { display:flex; flex-wrap:wrap; gap:9px; }
+
+    /* ════════════════════════════════════════════
+       CTA BOX
+    ════════════════════════════════════════════ */
+    .cta-sec { padding:80px 0; }
+    .cta-box {
+      background:linear-gradient(155deg,#0f1f52,#071030);
+      border:1px solid rgba(74,144,226,.3); border-radius:48px;
+      padding:72px 48px; text-align:center; position:relative; overflow:hidden;
+      box-shadow:var(--s-card), 0 0 80px rgba(74,144,226,.1);
+    }
+    .cta-box::before {
+      content:""; position:absolute;
+      top:0; left:50%; transform:translateX(-50%);
+      width:65%; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(74,144,226,.5),transparent);
+    }
+    .cta-glow {
+      position:absolute; top:-40%; left:50%; transform:translateX(-50%);
+      width:500px; height:500px;
+      background:radial-gradient(circle,rgba(74,144,226,.12),transparent 70%);
+      pointer-events:none;
+    }
+    .cta-title { font-size:clamp(28px,4vw,46px); font-weight:900; color:var(--tx-1); margin-bottom:18px; position:relative; }
+    .cta-desc  { font-size:17px; color:var(--tx-2); max-width:560px; margin:0 auto 42px; line-height:1.85; position:relative; }
+    .cta-btns  { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; position:relative; }
+
+    .btn-wa {
+      background:linear-gradient(135deg,#25d366,#128c7e);
+      color:#fff; padding:14px 28px; border-radius:var(--r-btn);
+      font-size:15px; font-weight:700; border:none; cursor:pointer;
+      text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      transition:all .3s; box-shadow:0 4px 20px rgba(37,211,102,.3);
+    }
+    .btn-wa:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(37,211,102,.5); }
+
+    /* ════════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════════ */
+    .footer {
+      background:rgba(3,9,26,.85); border-top:1px solid var(--b-faint);
+      padding:60px 0 30px; backdrop-filter:blur(10px);
+    }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
+    .footer-brand-desc { font-size:14px; color:var(--tx-2); line-height:1.85; margin:12px 0 18px; }
+    .footer-col-title { font-size:12px; font-weight:700; color:var(--tx-1); text-transform:uppercase; letter-spacing:.09em; margin-bottom:18px; }
+    .footer-link { display:block; font-size:14px; color:var(--tx-2); text-decoration:none; margin-bottom:11px; transition:color .2s; }
+    .footer-link:hover { color:var(--blue-lt); }
+    .footer-bottom { border-top:1px solid var(--b-faint); padding-top:22px; display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--tx-3); flex-wrap:wrap; gap:10px; }
+
+    /* ════════════════════════════════════════════
+       ANIMATIONS
+    ════════════════════════════════════════════ */
+    .fade-up { opacity:0; transform:translateY(32px); transition:opacity .65s ease, transform .65s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+
+    /* ════════════════════════════════════════════
+       SCROLLBAR
+    ════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:var(--surface-2); }
+    ::-webkit-scrollbar-thumb { background:var(--surface-3); border-radius:3px; }
+
+    /* ════════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════════ */
+    @media (max-width:1024px) {
+      .features-grid { grid-template-columns:repeat(2,1fr); }
+      .footer-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:768px) {
+      .hero-grid { grid-template-columns:1fr; }
+      .hero-img-wrap { display:none; }
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .features-grid { grid-template-columns:1fr; }
+      .pricing-grid { grid-template-columns:1fr; }
+      .price-card.featured { transform:none; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+      .nav-cta-desktop { display:none; }
+      .footer-grid { grid-template-columns:1fr 1fr; }
+      .cta-box { padding:44px 24px; }
+      .sc-tabs { gap:4px; }
+      .sc-tab { padding:6px 13px; font-size:12px; }
+      .sysreq-strip { padding:24px; gap:24px; }
+    }
+    @media (max-width:480px) {
+      .stats-row { grid-template-columns:1fr 1fr; }
+      .footer-grid { grid-template-columns:1fr; }
+      .hero-actions { flex-direction:column; }
+      .hero-trust { flex-direction:column; gap:10px; }
+      .cta-btns { flex-direction:column; align-items:center; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Ambient orbs -->
+<div class="orb orb-a"></div>
+<div class="orb orb-b"></div>
+<div class="orb orb-c"></div>
+
+<!-- ══════════════════════ NAVBAR ══════════════════════ -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">CMA</div>
+    <span class="logo-text">Cashier Manager App</span>
+  </a>
+
+  <div class="nav-links" id="nav-links-desktop">
+    <a href="#features" class="nav-link" data-key="nav_features">المميزات</a>
+    <a href="#screens"  class="nav-link" data-key="nav_screens">الشاشات</a>
+    <a href="#pricing"  class="nav-link" data-key="nav_pricing">الأسعار</a>
+    <a href="#contact"  class="nav-link" data-key="nav_contact">تواصل معنا</a>
+  </div>
+
+  <div class="nav-end">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')">العربية</button>
+      <button class="lang-btn"        id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+    <a href="#contact" class="btn-cta nav-cta-desktop">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span data-key="nav_cta">تواصل معنا</span>
+    </a>
+    <button class="nav-hamburger" id="hamburger" aria-label="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="#features" class="nav-mobile-link" data-key="nav_features">المميزات</a>
+  <a href="#screens"  class="nav-mobile-link" data-key="nav_screens">الشاشات</a>
+  <a href="#pricing"  class="nav-mobile-link" data-key="nav_pricing">الأسعار</a>
+  <a href="#contact"  class="nav-mobile-link" data-key="nav_contact">تواصل معنا</a>
+</div>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-grid">
+
+      <!-- Text column -->
+      <div>
+        <div class="hero-badge fade-up visible">
+          <span class="pulse-dot"></span>
+          <span data-key="hero_badge">أوفلاين بالكامل · لا يحتاج إنترنت</span>
+        </div>
+
+        <h1 class="hero-title fade-up visible" style="transition-delay:.08s">
+          <span data-key="hero_t1">محلك في شاشة</span><br>
+          <span class="grad" data-key="hero_t2">واحدة</span>
+        </h1>
+
+        <p class="hero-desc fade-up visible" style="transition-delay:.16s" data-key="hero_desc">
+          نظام كاشير احترافي لإدارة السوبر ماركت والصيدليات والمحلات التجارية. بياناتك على جهازك، سرعة فائقة، وتحكم كامل في مبيعاتك ومخزونك.
+        </p>
+
+        <div class="hero-actions fade-up visible" style="transition-delay:.24s">
+          <a href="#pricing" class="btn-cta" style="padding:13px 26px;font-size:15px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span data-key="hero_cta1">تحميل النسخة التجريبية</span>
+          </a>
+          <a href="#screens" class="btn-outline" style="padding:13px 26px;font-size:15px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+            <span data-key="hero_cta2">مشاهدة الشاشات</span>
+          </a>
+        </div>
+
+        <div class="hero-trust fade-up visible" style="transition-delay:.32s">
+          <div class="trust-item">
+            <span class="trust-check"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span>
+            <span data-key="trust1">ترخيص مدى الحياة</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-check"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span>
+            <span data-key="trust2">دعم فني عبر واتساب</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-check"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span>
+            <span data-key="trust3">تركيب عن بُعد</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image column -->
+      <div class="hero-img-wrap float-anim">
+        <div class="hero-img-glow"></div>
+        <div class="hero-screen">
+          <div class="screen-titlebar">
+            <span class="win-btn wb-red"></span>
+            <span class="win-btn wb-amber"></span>
+            <span class="win-btn wb-green"></span>
+            <span class="screen-title-text">Cashier Manager App · Dashboard</span>
+          </div>
+          <img id="hero-img" src="assets/ar/dashboared-ar.jpg" alt="Dashboard Preview">
+        </div>
+        <!-- Float badge top -->
+        <div class="float-card fc-tl">
+          <div class="fc-label">OFFLINE</div>
+          <div class="fc-value" style="color:var(--green)">100%</div>
+        </div>
+        <!-- Float badge bottom -->
+        <div class="float-card fc-br">
+          <div class="fc-label" data-key="fc_enc">تشفير</div>
+          <div class="fc-value" style="color:var(--blue-lt)">Ed25519</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ STATS ══════════════════════ -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num">3</div>
+        <div class="stat-lbl" data-key="stat1">أيام تجربة مجانية</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">80<span style="font-size:14px">/</span>58<span style="font-size:14px">mm</span></div>
+        <div class="stat-lbl" data-key="stat2">دعم الطابعات الحرارية</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">Ed25519</div>
+        <div class="stat-lbl" data-key="stat3">تشفير متقدم للبيانات</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">Multi</div>
+        <div class="stat-lbl" data-key="stat4">أدوار المستخدمين</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ FEATURES ══════════════════════ -->
+<section class="features-sec" id="features">
+  <div class="container">
+    <div class="sec-header fade-up">
+      <span class="sec-badge" data-key="feat_badge">المميزات</span>
+      <h2 class="sec-title" data-key="feat_title">كل ما تحتاجه لإدارة تجارتك</h2>
+      <p class="sec-desc" data-key="feat_desc">صُمم Cashier Manager App ليكون بسيطاً لعمليات الكاشير اليومية وعميقاً بما يكفي لمنح المدير كامل التقارير والرقابة.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feat-card fade-up">
+        <div class="feat-icon fi-blue">🛒</div>
+        <h3 class="feat-title" data-key="f1t">شاشة بيع سريعة</h3>
+        <p class="feat-desc" data-key="f1d">دعم كامل للباركود، بحث فوري بالاسم، دفع متعدد الوسائل (نقدي / بطاقة / آجل)، وإصدار فاتورة PDF احترافية في ثوانٍ.</p>
+      </div>
+
+      <div class="feat-card fade-up">
+        <div class="feat-icon fi-teal">📦</div>
+        <h3 class="feat-title" data-key="f2t">إدارة المخزون الاحترافية</h3>
+        <p class="feat-desc" data-key="f2d">متابعة أرصدة الأصناف، تنبيهات النواقص، تواريخ الصلاحية، حركة كل صنف، وتصدير قوائم إعادة التخزين بـ Excel.</p>
+      </div>
+
+      <div class="feat-card fade-up">
+        <div class="feat-icon fi-amber">⏱️</div>
+        <h3 class="feat-title" data-key="f3t">نظام الورديات والصندوق</h3>
+        <p class="feat-desc" data-key="f3d">فتح وإغلاق الورديات مع رصيد افتتاحي وختامي، حساب عجز الصندوق تلقائياً، وتقارير مفصلة لكل موظف.</p>
+      </div>
+
+      <div class="feat-card fade-up">
+        <div class="feat-icon fi-purple">📊</div>
+        <h3 class="feat-title" data-key="f4t">تقارير وتحليلات متقدمة</h3>
+        <p class="feat-desc" data-key="f4d">تقارير يومية وبالفترات، الأصناف الأكثر مبيعاً، أداء كل موظف، وتصدير شامل بـ Excel و PDF بضغطة واحدة.</p>
+      </div>
+
+      <div class="feat-card fade-up">
+        <div class="feat-icon fi-red">🔒</div>
+        <h3 class="feat-title" data-key="f5t">أمان البيانات والمراقبة</h3>
+        <p class="feat-desc" data-key="f5d">نسخ احتياطي تلقائي مجدول، سجل مراقبة كامل للنشاطات (Audit Log) لمنع التلاعب، وتشفير Ed25519.</p>
+      </div>
+
+      <div class="feat-card fade-up">
+        <div class="feat-icon fi-green">↩️</div>
+        <h3 class="feat-title" data-key="f6t">المرتجعات وإعدادات المحل</h3>
+        <p class="feat-desc" data-key="f6d">إدارة المرتجعات جزئياً أو كاملاً من أي فاتورة، مع تخصيص كامل للمحل والطابعات وهوية البراند.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ SCREENS SHOWCASE ══════════════════════ -->
+<section class="showcase-sec" id="screens">
+  <div class="container">
+    <div class="sec-header fade-up">
+      <span class="sec-badge" data-key="sc_badge">معاينة الشاشات</span>
+      <h2 class="sec-title" data-key="sc_title">كل شاشة مصممة بعناية</h2>
+      <p class="sec-desc" data-key="sc_desc">واجهات واضحة وسهلة الاستخدام لكل من الكاشير والمدير، مع دعم كامل للعربية والإنجليزية.</p>
+    </div>
+
+    <div class="sc-tabs">
+      <button class="sc-tab active" data-screen="dashboard" onclick="switchScreen(this,'dashboard')"><span data-key="tab_db">لوحة التحكم</span></button>
+      <button class="sc-tab"        data-screen="pos"       onclick="switchScreen(this,'pos')"><span data-key="tab_pos">نقطة البيع</span></button>
+      <button class="sc-tab"        data-screen="inventory" onclick="switchScreen(this,'inventory')"><span data-key="tab_inv">المخزون</span></button>
+      <button class="sc-tab"        data-screen="reports"   onclick="switchScreen(this,'reports')"><span data-key="tab_rep">التقارير</span></button>
+      <button class="sc-tab"        data-screen="returns"   onclick="switchScreen(this,'returns')"><span data-key="tab_ret">المرتجعات</span></button>
+      <button class="sc-tab"        data-screen="settings"  onclick="switchScreen(this,'settings')"><span data-key="tab_set">الإعدادات</span></button>
+    </div>
+
+    <div class="sc-frame fade-up">
+      <div class="sc-titlebar">
+        <span class="win-btn wb-red"></span>
+        <span class="win-btn wb-amber"></span>
+        <span class="win-btn wb-green"></span>
+        <span class="sc-win-title" id="sc-wintitle">Cashier Manager App · Dashboard</span>
+      </div>
+      <img id="showcase-img" src="assets/ar/dashboared-ar.jpg" alt="Screen preview">
+      <div class="sc-caption">
+        <div>
+          <div class="sc-cap-title" id="sc-cap-title" data-key="cap_db_t">لوحة التحكم الرئيسية</div>
+          <div class="sc-cap-desc"  id="sc-cap-desc"  data-key="cap_db_d">نظرة عامة فورية على المبيعات اليومية، الإيرادات، وأداء الفريق في شاشة واحدة.</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          <span class="req-tag">Windows 10</span>
+          <span class="req-tag">Windows 11</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════ PRICING ══════════════════════ -->
+<section class="pricing-sec" id="pricing">
+  <div class="container">
+    <div class="sec-header fade-up">
+      <span class="sec-badge" data-key="pr_badge">الأسعار</span>
+      <h2 class="sec-title" data-key="pr_title">باقات تناسب الجميع</h2>
+      <p class="sec-desc" data-key="pr_desc">ابدأ بالتجربة المجانية، ثم اختر الباقة المناسبة. بدون رسوم خفية.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- Basic -->
+      <div class="price-card fade-up">
+        <div class="price-plan" data-key="pl1_name">أساسي</div>
+        <div>
+          <span class="price-curr" data-key="currency">ج.م</span><span class="price-val">2,200</span>
+        </div>
+        <div class="price-per" data-key="pl1_per">مرة واحدة للأبد</div>
+        <div class="price-div"></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_pos">بيع وإصدار فواتير باركود</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_ret">مرتجعات جزئية وكاملة</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_shifts">نظام ورديات وصندوق</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_alert">تنبيه مخزون (عرض فقط)</span></div>
+        <div class="pf-row"><span class="pf-icon pf-no"><svg viewBox="0 0 8 8"><line x1="1" y1="1" x2="7" y2="7"/><line x1="7" y1="1" x2="1" y2="7"/></svg></span><span style="opacity:.45" data-key="pf_exp">تواريخ الصلاحية</span></div>
+        <div class="pf-row"><span class="pf-icon pf-no"><svg viewBox="0 0 8 8"><line x1="1" y1="1" x2="7" y2="7"/><line x1="7" y1="1" x2="1" y2="7"/></svg></span><span style="opacity:.45" data-key="pf_mov">حركة المخزون التفصيلية</span></div>
+        <a href="https://github.com/MinaEkladios/Cashier_app/releases/download/Basic_v01/cashier.zip" class="btn-block bb-ghost" data-key="pl1_btn" download>جرب مجاناً 3 أيام</a>
+      </div>
+
+      <!-- Professional (Featured) -->
+      <div class="price-card featured fade-up">
+        <div class="price-badge" data-key="pl_hot">الأكثر طلباً</div>
+        <div class="price-plan" data-key="pl2_name">احترافي</div>
+        <div>
+          <span class="price-curr" data-key="currency">ج.م</span><span class="price-val">3,500</span>
+        </div>
+        <div class="price-per" data-key="pl2_per">مرة واحدة للأبد</div>
+        <div class="price-div"></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_all_basic">كل مميزات الأساسي</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_exp2">تواريخ الصلاحية والتنبيهات</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_mov2">حركة المخزون التفصيلية</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_barcode">بحث باركود أونلاين</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_restock">قائمة إعادة التخزين Excel</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_reports">تقارير PDF + Excel متقدمة</span></div>
+        <a href="https://github.com/MinaEkladios/Cashier_app/releases/download/Basic_v01/cashier.zip" class="btn-block bb-primary" data-key="pl2_btn" download>اشتري الآن</a>
+      </div>
+
+      <!-- Premium -->
+      <div class="price-card fade-up">
+        <div class="price-plan" data-key="pl3_name">مميز</div>
+        <div>
+          <span class="price-curr" data-key="currency">ج.م</span><span class="price-val">4,500</span>
+        </div>
+        <div class="price-per" data-key="pl3_per">مرة واحدة للأبد</div>
+        <div class="price-div"></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_all_pro">كل مميزات الاحترافي</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes" style="color:var(--amber)">🎁</span><span data-key="pf_free_feat" style="color:var(--amber);font-weight:600">ميزة جديدة قادمة – مجاناً</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_priority">دعم فني أولوي</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_brand">تخصيص كامل للفاتورة والبراند</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_train">جلسة تدريبية مخصصة</span></div>
+        <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_sup1y">دعم فني سنة كاملة</span></div>
+        <a href="https://wa.me/201207685559" class="btn-block bb-ghost" data-key="pl3_btn" target="_blank" rel="noopener noreferrer">تواصل معنا</a>
+      </div>
+
+    </div>
+
+    <div class="trial-strip fade-up">
+      <span style="color:var(--blue-lt);font-weight:700">🎁 </span>
+      <span data-key="trial_note">جميع الباقات تبدأ بتجربة مجانية 3 أيام بكامل المميزات · بدون بطاقة ائتمان</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ SYSTEM REQUIREMENTS ══════════════════════ -->
+<section style="padding:20px 0 60px">
+  <div class="container">
+    <div class="sysreq-strip fade-up">
+      <div class="sysreq-text">
+        <div class="sysreq-label" data-key="sr_label">متطلبات النظام</div>
+        <div class="sysreq-title" data-key="sr_title">يعمل على جهازك الحالي</div>
+        <div class="sysreq-desc"  data-key="sr_desc">لا يحتاج معالج قوي أو إنترنت دائم</div>
+      </div>
+      <div class="sysreq-tags">
+        <span class="req-tag">🪟 Windows 10 / 11 (64-bit)</span>
+        <span class="req-tag">🧠 4 GB RAM+</span>
+        <span class="req-tag">💾 500 MB HDD</span>
+        <span class="req-tag">🖨️ <span data-key="sr_printer">طابعة حرارية (اختياري)</span></span>
+        <span class="req-tag">📶 <span data-key="sr_net">إنترنت للتفعيل فقط</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ CTA ══════════════════════ -->
+<section class="cta-sec" id="contact">
+  <div class="container">
+    <div class="cta-box fade-up">
+      <div class="cta-glow"></div>
+      <h2 class="cta-title" data-key="cta_title">جاهز لتطوير محلك؟</h2>
+      <p class="cta-desc"  data-key="cta_desc">ابدأ التجربة المجانية اليوم أو تواصل معنا للتركيب عن بُعد وضمان عمل البرنامج على جهازك.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/201207685559" class="btn-wa">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.105.546 4.083 1.503 5.803L.057 23.196a.5.5 0 00.625.625l5.4-1.443A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9c-1.97 0-3.81-.54-5.376-1.47l-.386-.23-3.97 1.06 1.08-3.942-.252-.402A9.845 9.845 0 012.1 12C2.1 6.534 6.534 2.1 12 2.1S21.9 6.534 21.9 12 17.466 21.9 12 21.9z"/></svg>
+          <span data-key="cta_wa">تواصل عبر واتساب</span>
+        </a>
+        <a href="https://github.com/MinaEkladios/Cashier_app/releases/download/Basic_v01/cashier.zip" class="btn-cta" style="padding:14px 28px;font-size:15px" download>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span data-key="cta_dl">تحميل النسخة التجريبية</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div>
+        <a href="#" class="nav-logo" style="display:inline-flex">
+          <div class="logo-icon">CMA</div>
+          <span class="logo-text" style="margin-inline-start:10px">Cashier Manager App</span>
+        </a>
+        <p class="footer-brand-desc" data-key="ft_brand">نظام كاشير احترافي لأجهزة ويندوز. بياناتك على جهازك، آمنة 100%، تعمل بدون إنترنت.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="req-tag">🔒 Offline First</span>
+          <span class="req-tag">⚡ Fast & Reliable</span>
+        </div>
+      </div>
+      <!-- Quick links -->
+      <div>
+        <div class="footer-col-title" data-key="ft_links">روابط سريعة</div>
+        <a href="#features" class="footer-link" data-key="nav_features">المميزات</a>
+        <a href="#screens"  class="footer-link" data-key="nav_screens">الشاشات</a>
+        <a href="#pricing"  class="footer-link" data-key="nav_pricing">الأسعار</a>
+        <a href="#contact"  class="footer-link" data-key="nav_contact">تواصل معنا</a>
+      </div>
+      <!-- Requirements -->
+      <div>
+        <div class="footer-col-title" data-key="ft_req">المتطلبات</div>
+        <span class="footer-link" style="cursor:default">Windows 10 / 11 (64-bit)</span>
+        <span class="footer-link" style="cursor:default" data-key="ft_ram">4 GB RAM فأكثر</span>
+        <span class="footer-link" style="cursor:default" data-key="ft_storage">500 MB مساحة تخزين</span>
+        <span class="footer-link" style="cursor:default" data-key="ft_printer">طابعة حرارية (اختياري)</span>
+      </div>
+      <!-- Developer -->
+      <div>
+        <div class="footer-col-title" data-key="ft_dev">تطوير</div>
+        <span class="footer-link" style="cursor:default">Mina Ekladios</span>
+        <span class="footer-link" style="cursor:default">Developer & Designer</span>
+        <a href="https://wa.me/201207685559" class="footer-link" style="color:var(--blue-lt)">WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-key="ft_copy">© 2026 Cashier Manager App · جميع الحقوق محفوظة</span>
+      <span data-key="ft_made">صُنع بـ ❤️ في مصر</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════ JAVASCRIPT ══════════════════════ -->
+<script>
+
+/* ════════════════════════════════════
+   TRANSLATIONS
+════════════════════════════════════ */
+const T = {
+  ar: {
+    page_title:   "Cashier Manager App – نظام الكاشير الاحترافي لويندوز",
+    nav_features: "المميزات",
+    nav_screens:  "الشاشات",
+    nav_pricing:  "الأسعار",
+    nav_contact:  "تواصل معنا",
+    nav_cta:      "تواصل معنا",
+    hero_badge:   "أوفلاين بالكامل · لا يحتاج إنترنت",
+    hero_t1:      "محلك في شاشة",
+    hero_t2:      "واحدة",
+    hero_desc:    "نظام كاشير احترافي لإدارة السوبر ماركت والصيدليات والمحلات التجارية. بياناتك على جهازك، سرعة فائقة، وتحكم كامل في مبيعاتك ومخزونك.",
+    hero_cta1:    "تحميل النسخة التجريبية",
+    hero_cta2:    "مشاهدة الشاشات",
+    trust1:       "ترخيص مدى الحياة",
+    trust2:       "دعم فني عبر واتساب",
+    trust3:       "تركيب عن بُعد",
+    fc_enc:       "تشفير",
+    stat1:        "أيام تجربة مجانية",
+    stat2:        "دعم الطابعات الحرارية",
+    stat3:        "تشفير متقدم للبيانات",
+    stat4:        "أدوار المستخدمين",
+    feat_badge:   "المميزات",
+    feat_title:   "كل ما تحتاجه لإدارة تجارتك",
+    feat_desc:    "صُمم Cashier Manager App ليكون بسيطاً لعمليات الكاشير اليومية وعميقاً بما يكفي لمنح المدير كامل التقارير والرقابة.",
+    f1t: "شاشة بيع سريعة",
+    f1d: "دعم كامل للباركود، بحث فوري بالاسم، دفع متعدد الوسائل (نقدي / بطاقة / آجل)، وإصدار فاتورة PDF احترافية في ثوانٍ.",
+    f2t: "إدارة المخزون الاحترافية",
+    f2d: "متابعة أرصدة الأصناف، تنبيهات النواقص، تواريخ الصلاحية، حركة كل صنف، وتصدير قوائم إعادة التخزين بـ Excel.",
+    f3t: "نظام الورديات والصندوق",
+    f3d: "فتح وإغلاق الورديات مع رصيد افتتاحي وختامي، حساب عجز الصندوق تلقائياً، وتقارير مفصلة لكل موظف.",
+    f4t: "تقارير وتحليلات متقدمة",
+    f4d: "تقارير يومية وبالفترات، الأصناف الأكثر مبيعاً، أداء كل موظف، وتصدير شامل بـ Excel و PDF بضغطة واحدة.",
+    f5t: "أمان البيانات والمراقبة",
+    f5d: "نسخ احتياطي تلقائي مجدول، سجل مراقبة كامل للنشاطات (Audit Log) لمنع التلاعب، وتشفير Ed25519.",
+    f6t: "المرتجعات وإعدادات المحل",
+    f6d: "إدارة المرتجعات جزئياً أو كاملاً من أي فاتورة، مع تخصيص كامل للمحل والطابعات وهوية البراند.",
+    sc_badge: "معاينة الشاشات",
+    sc_title: "كل شاشة مصممة بعناية",
+    sc_desc:  "واجهات واضحة وسهلة الاستخدام لكل من الكاشير والمدير، مع دعم كامل للعربية والإنجليزية.",
+    tab_db:  "لوحة التحكم",
+    tab_pos: "نقطة البيع",
+    tab_inv: "المخزون",
+    tab_rep: "التقارير",
+    tab_ret: "المرتجعات",
+    tab_set: "الإعدادات",
+    cap_db_t:  "لوحة التحكم الرئيسية",
+    cap_db_d:  "نظرة عامة فورية على المبيعات اليومية، الإيرادات، وأداء الفريق في شاشة واحدة.",
+    cap_pos_t: "شاشة نقطة البيع",
+    cap_pos_d: "واجهة سريعة وبسيطة للكاشير. بحث بالباركود أو الاسم، وإتمام البيع بأقل عدد نقرات.",
+    cap_inv_t: "إدارة المخزون",
+    cap_inv_d: "تتبع أرصدة جميع الأصناف، مع تنبيهات للنواقص وتواريخ الصلاحية القريبة.",
+    cap_rep_t: "التقارير والتحليلات",
+    cap_rep_d: "تقارير مفصلة بالفترات الزمنية، مقارنات الأداء، وتصدير مباشر لـ Excel و PDF.",
+    cap_ret_t: "إدارة المرتجعات",
+    cap_ret_d: "استرداد أي فاتورة بالكامل أو جزئياً، مع تحديث تلقائي للمخزون والحسابات.",
+    cap_set_t: "إعدادات النظام",
+    cap_set_d: "تخصيص كامل للمحل والطابعات والمستخدمين وهوية الفاتورة.",
+    pr_badge: "الأسعار",
+    pr_title: "باقات تناسب الجميع",
+    pr_desc:  "ابدأ بالتجربة المجانية، ثم اختر الباقة المناسبة. بدون رسوم خفية.",
+    currency: "ج.م",
+    pl1_name: "أساسي",       pl1_per: "مرة واحدة للأبد",
+    pl2_name: "احترافي",     pl2_per: "مرة واحدة للأبد",
+    pl3_name: "مميز",        pl3_per: "مرة واحدة للأبد",
+    pl_hot:   "الأكثر طلباً",
+    pf_pos:       "بيع وإصدار فواتير باركود",
+    pf_ret:       "مرتجعات جزئية وكاملة",
+    pf_shifts:    "نظام ورديات وصندوق",
+    pf_alert:     "تنبيه مخزون (عرض فقط)",
+    pf_exp:       "تواريخ الصلاحية",
+    pf_mov:       "حركة المخزون التفصيلية",
+    pf_all_basic: "كل مميزات الأساسي",
+    pf_exp2:      "تواريخ الصلاحية والتنبيهات",
+    pf_mov2:      "حركة المخزون التفصيلية",
+    pf_barcode:   "بحث باركود أونلاين",
+    pf_restock:   "قائمة إعادة التخزين Excel",
+    pf_reports:   "تقارير PDF + Excel متقدمة",
+    pf_all_pro:   "كل مميزات الاحترافي",
+    pf_free_feat: "ميزة جديدة قادمة – مجاناً",
+    pf_priority:  "دعم فني أولوي",
+    pf_brand:     "تخصيص كامل للفاتورة والبراند",
+    pf_train:     "جلسة تدريبية مخصصة",
+    pf_sup1y:     "دعم فني سنة كاملة",
+    pl1_btn: "جرب مجاناً 3 أيام",
+    pl2_btn: "اشتري الآن",
+    pl3_btn: "تواصل معنا",
+    trial_note: "جميع الباقات تبدأ بتجربة مجانية 3 أيام بكامل المميزات · بدون بطاقة ائتمان",
+    sr_label:   "متطلبات النظام",
+    sr_title:   "يعمل على جهازك الحالي",
+    sr_desc:    "لا يحتاج معالج قوي أو إنترنت دائم",
+    sr_printer: "طابعة حرارية (اختياري)",
+    sr_net:     "إنترنت للتفعيل فقط",
+    cta_title: "جاهز لتطوير محلك؟",
+    cta_desc:  "ابدأ التجربة المجانية اليوم أو تواصل معنا للتركيب عن بُعد وضمان عمل البرنامج على جهازك.",
+    cta_wa:    "تواصل عبر واتساب",
+    cta_dl:    "تحميل النسخة التجريبية",
+    ft_brand:   "نظام كاشير احترافي لأجهزة ويندوز. بياناتك على جهازك، آمنة 100%، تعمل بدون إنترنت.",
+    ft_links:   "روابط سريعة",
+    ft_req:     "المتطلبات",
+    ft_ram:     "4 GB RAM فأكثر",
+    ft_storage: "500 MB مساحة تخزين",
+    ft_printer: "طابعة حرارية (اختياري)",
+    ft_dev:     "تطوير",
+    ft_copy:    "© 2026 Cashier Manager App · جميع الحقوق محفوظة",
+    ft_made:    "صُنع بـ ❤️ في مصر",
+  },
+  en: {
+    page_title:   "Cashier Manager App – Professional POS System for Windows",
+    nav_features: "Features",
+    nav_screens:  "Screens",
+    nav_pricing:  "Pricing",
+    nav_contact:  "Contact",
+    nav_cta:      "Contact Us",
+    hero_badge:   "100% Offline · No Internet Required",
+    hero_t1:      "Your Store,",
+    hero_t2:      "One Screen.",
+    hero_desc:    "A professional POS & inventory management system for supermarkets, pharmacies, and retail stores. Your data stays on your device — fast, secure, and always available.",
+    hero_cta1:    "Download Free Trial",
+    hero_cta2:    "View Screenshots",
+    trust1:       "Lifetime License",
+    trust2:       "WhatsApp Support",
+    trust3:       "Remote Installation",
+    fc_enc:       "Encryption",
+    stat1:        "Days Free Trial",
+    stat2:        "Thermal Printer Support",
+    stat3:        "Advanced Encryption",
+    stat4:        "User Roles",
+    feat_badge:   "Features",
+    feat_title:   "Everything You Need to Run Your Business",
+    feat_desc:    "Cashier Manager App is simple enough for daily cashier tasks, yet powerful enough to give managers full reports and oversight.",
+    f1t: "Lightning-Fast POS Screen",
+    f1d: "Full barcode support, instant name search, multi-payment methods (cash / card / credit), and professional PDF invoices generated in seconds.",
+    f2t: "Professional Inventory Management",
+    f2d: "Track stock levels, low-stock alerts, expiry dates, item movement history, and export restock lists to Excel.",
+    f3t: "Shifts & Cash Drawer System",
+    f3d: "Open and close shifts with opening/closing balances, automatic cash shortage calculations, and detailed per-employee reports.",
+    f4t: "Advanced Reports & Analytics",
+    f4d: "Daily and period reports, top-selling items, employee performance, and full Excel & PDF export with one click.",
+    f5t: "Data Security & Audit Log",
+    f5d: "Scheduled automatic backups, complete activity audit log to prevent tampering, and Ed25519 encryption.",
+    f6t: "Returns & Store Settings",
+    f6d: "Full or partial returns from any invoice, complete store customization, printer settings, and brand identity.",
+    sc_badge: "Screen Preview",
+    sc_title: "Every Screen, Carefully Designed",
+    sc_desc:  "Clean, intuitive interfaces for both cashiers and managers, with full Arabic and English language support.",
+    tab_db:  "Dashboard",
+    tab_pos: "Point of Sale",
+    tab_inv: "Inventory",
+    tab_rep: "Reports",
+    tab_ret: "Returns",
+    tab_set: "Settings",
+    cap_db_t:  "Main Dashboard",
+    cap_db_d:  "Instant overview of daily sales, revenue, and team performance — all in one screen.",
+    cap_pos_t: "Point of Sale Screen",
+    cap_pos_d: "Fast and simple cashier interface. Search by barcode or name, complete sales with minimal clicks.",
+    cap_inv_t: "Inventory Management",
+    cap_inv_d: "Track stock for all items, with alerts for low inventory and upcoming expiry dates.",
+    cap_rep_t: "Reports & Analytics",
+    cap_rep_d: "Detailed time-based reports, performance comparisons, and direct export to Excel & PDF.",
+    cap_ret_t: "Returns Management",
+    cap_ret_d: "Recover any invoice fully or partially, with automatic inventory and account updates.",
+    cap_set_t: "System Settings",
+    cap_set_d: "Full customization for your store, printers, users, and invoice branding.",
+    pr_badge: "Pricing",
+    pr_title: "Plans for Every Business",
+    pr_desc:  "Start with the free trial, then choose the plan that fits your business. No hidden fees.",
+    currency: "EGP",
+    pl1_name: "Basic",       pl1_per: "One-time payment",
+    pl2_name: "Professional",pl2_per: "One-time payment",
+    pl3_name: "Premium",     pl3_per: "One-time payment",
+    pl_hot:   "Most Popular",
+    pf_pos:       "Sales & barcode invoicing",
+    pf_ret:       "Full & partial returns",
+    pf_shifts:    "Shifts & cash drawer system",
+    pf_alert:     "Stock alert (view only)",
+    pf_exp:       "Expiry date tracking",
+    pf_mov:       "Detailed inventory movement",
+    pf_all_basic: "All Basic features",
+    pf_exp2:      "Expiry tracking & alerts",
+    pf_mov2:      "Detailed inventory movement",
+    pf_barcode:   "Online barcode lookup",
+    pf_restock:   "Excel restock list export",
+    pf_reports:   "Advanced PDF + Excel reports",
+    pf_all_pro:   "All Professional features",
+    pf_free_feat: "New upcoming feature – Free",
+    pf_priority:  "Priority technical support",
+    pf_brand:     "Full invoice & brand customization",
+    pf_train:     "Personalized training session",
+    pf_sup1y:     "Full year tech support",
+    pl1_btn: "Try Free for 3 Days",
+    pl2_btn: "Buy Now",
+    pl3_btn: "Contact Us",
+    trial_note: "All plans start with a 3-day free trial with full features · No credit card required",
+    sr_label:   "System Requirements",
+    sr_title:   "Runs on Your Current PC",
+    sr_desc:    "No powerful processor or constant internet required",
+    sr_printer: "Thermal Printer (Optional)",
+    sr_net:     "Internet for activation only",
+    cta_title: "Ready to Upgrade Your Store?",
+    cta_desc:  "Start the free trial today or contact us for remote installation and guaranteed setup on your device.",
+    cta_wa:    "Chat on WhatsApp",
+    cta_dl:    "Download Free Trial",
+    ft_brand:   "Professional POS system for Windows. Your data stays on your device, 100% secure, works offline.",
+    ft_links:   "Quick Links",
+    ft_req:     "Requirements",
+    ft_ram:     "4 GB RAM or more",
+    ft_storage: "500 MB storage",
+    ft_printer: "Thermal printer (optional)",
+    ft_dev:     "Developer",
+    ft_copy:    "© 2025 Cashier Manager App · All Rights Reserved",
+    ft_made:    "Made with ❤️ in Egypt",
+  }
+};
+
+/* ════════════════════════════════════
+   SCREEN DATA
+════════════════════════════════════ */
+const SCREENS = {
+  dashboard: {
+    img_ar: 'assets/ar/dashboared-ar.jpg', img_en: 'assets/en/dashboared-en.jpg',
+    win: 'Cashier Manager App · Dashboard',
+    t: 'cap_db_t', d: 'cap_db_d'
+  },
+  pos: {
+    img_ar: 'assets/ar/POS-ar.jpg', img_en: 'assets/en/POS-en.jpg',
+    win: 'Cashier Manager App · Point of Sale',
+    t: 'cap_pos_t', d: 'cap_pos_d'
+  },
+  inventory: {
+    img_ar: 'assets/ar/Inventory-ar.jpg', img_en: 'assets/en/Inventory-en.jpg',
+    win: 'Cashier Manager App · Inventory',
+    t: 'cap_inv_t', d: 'cap_inv_d'
+  },
+  reports: {
+    img_ar: 'assets/ar/Reports-ar.jpg', img_en: 'assets/en/Reports-en.jpg',
+    win: 'Cashier Manager App · Reports',
+    t: 'cap_rep_t', d: 'cap_rep_d'
+  },
+  returns: {
+    img_ar: 'assets/ar/Returns-ar.jpg', img_en: 'assets/en/Returns-en.jpg',
+    win: 'Cashier Manager App · Returns',
+    t: 'cap_ret_t', d: 'cap_ret_d'
+  },
+  settings: {
+    img_ar: 'assets/ar/Settings-ar.jpg', img_en: 'assets/en/Settings-en.jpg',
+    win: 'Cashier Manager App · Settings',
+    t: 'cap_set_t', d: 'cap_set_d'
+  }
+};
+
+let LANG    = 'ar';
+let CURRENT = 'dashboard';
+
+/* ════════════════════════════════════
+   SET LANGUAGE
+════════════════════════════════════ */
+function setLang(lang) {
+  LANG = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+  document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+  document.title = T[lang].page_title;
+
+  // Update all keyed text nodes
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const v = T[lang][el.dataset.key];
+    if (v !== undefined) el.textContent = v;
+  });
+
+  // Refresh showcase image & caption
+  updateShowcase();
+
+  // Refresh hero image
+  const hi = document.getElementById('hero-img');
+  hi.style.opacity = '0';
+  setTimeout(() => {
+    hi.src = lang === 'ar' ? SCREENS.dashboard.img_ar : SCREENS.dashboard.img_en;
+    hi.style.opacity = '1';
+  }, 200);
+}
+
+/* ════════════════════════════════════
+   SWITCH SCREEN
+════════════════════════════════════ */
+function switchScreen(btn, key) {
+  CURRENT = key;
+  document.querySelectorAll('.sc-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  updateShowcase();
+}
+
+function updateShowcase() {
+  const s    = SCREENS[CURRENT];
+  const t    = T[LANG];
+  const img  = document.getElementById('showcase-img');
+  const capT = document.getElementById('sc-cap-title');
+  const capD = document.getElementById('sc-cap-desc');
+  const winT = document.getElementById('sc-wintitle');
+
+  img.style.opacity = '0';
+  setTimeout(() => {
+    img.src = LANG === 'ar' ? s.img_ar : s.img_en;
+    img.style.opacity = '1';
+  }, 260);
+
+  capT.textContent = t[s.t] || '';
+  capD.textContent = t[s.d] || '';
+  winT.textContent = s.win;
+}
+
+/* ════════════════════════════════════
+   NAVBAR SCROLL
+════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', scrollY > 60);
+});
+
+/* ════════════════════════════════════
+   HAMBURGER MENU
+════════════════════════════════════ */
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
+document.getElementById('mobile-menu').querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
+});
+
+/* ════════════════════════════════════
+   FADE-UP  (Intersection Observer)
+════════════════════════════════════ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-up:not(.visible)').forEach(el => io.observe(el));
+
+/* ════════════════════════════════════
+   SMOOTH SCROLL
+════════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+  });
+});
+
+/* Image transition init */
+document.getElementById('showcase-img').style.transition = 'opacity .28s ease';
+document.getElementById('hero-img').style.transition     = 'opacity .2s ease';
+
+</script>
+</body>
+</html>
