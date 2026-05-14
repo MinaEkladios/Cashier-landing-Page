@@ -1,6 +1,6 @@
 {
-    "version": "1.1.0",
-    "changelog": "- إضافة تقارير جديدة\n- إصلاح مشكلة الباركود\n- تحسين الأداء",
-    "download_url": "",
-    "paid": true
+     "version": "1.1.0",
+     "changelog": "- إضافة تقارير جديدة\n- إصلاح مشكلة الباركود\n- تحسين الأداء",
+     "download_url": "https://minaekladios.github.io/Cashier-landing-Page/",
+     "paid": false
 }
