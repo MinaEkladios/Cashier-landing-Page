@@ -548,70 +548,25 @@
     @media (max-width:768px) {
       .hero-grid { grid-template-columns:1fr; }
       .hero-img-wrap { display:none; }
-      .hero { padding:100px 0 56px; }
-      .hero-desc { font-size:16px; }
       .stats-row { grid-template-columns:repeat(2,1fr); }
       .features-grid { grid-template-columns:1fr; }
-      .features-sec, .showcase-sec, .pricing-sec { padding:70px 0; }
-      .cta-sec { padding:50px 0; }
-      .sec-header { margin-bottom:36px; }
       .pricing-grid { grid-template-columns:1fr; }
       .price-card.featured { transform:none; }
       .nav-links { display:none; }
       .nav-hamburger { display:flex; }
       .nav-cta-desktop { display:none; }
       .footer-grid { grid-template-columns:1fr 1fr; }
-      .footer-bottom { flex-direction:column; text-align:center; gap:8px; }
-      .cta-box { padding:44px 24px; border-radius:32px; }
-      .sc-tabs { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; width:100%; margin-inline:0; border-radius:16px; }
-      .sc-tabs::-webkit-scrollbar { display:none; }
-      .sc-tab { padding:6px 14px; font-size:12px; flex-shrink:0; }
-      .sc-caption { flex-direction:column; }
-      .sysreq-strip { padding:24px; gap:20px; flex-direction:column; align-items:flex-start; }
-      .sysreq-tags { width:100%; }
-      .container { padding:0 18px; }
-      .feat-card { padding:26px; }
-      .price-card { padding:30px 26px; }
+      .cta-box { padding:44px 24px; }
+      .sc-tabs { gap:4px; }
+      .sc-tab { padding:6px 13px; font-size:12px; }
+      .sysreq-strip { padding:24px; gap:24px; }
     }
     @media (max-width:480px) {
       .stats-row { grid-template-columns:1fr 1fr; }
       .footer-grid { grid-template-columns:1fr; }
-      .footer-grid > div + div { padding-top:4px; }
-      .hero { padding:80px 0 48px; }
       .hero-actions { flex-direction:column; }
       .hero-trust { flex-direction:column; gap:10px; }
       .cta-btns { flex-direction:column; align-items:center; }
-      .navbar { padding:8px 14px; }
-      .logo-text { font-size:13px; }
-      .stat-num { font-size:22px; }
-      .stat-lbl { font-size:12px; }
-      .stat-cell { padding:12px 8px; }
-      .features-sec, .showcase-sec, .pricing-sec { padding:56px 0; }
-      .cta-sec { padding:40px 0; }
-      .sec-header { margin-bottom:28px; }
-      .feat-card { padding:22px 18px; }
-      .feat-title { font-size:16px; }
-      .feat-desc { font-size:13px; }
-      .price-card { padding:26px 20px; }
-      .price-val { font-size:36px; }
-      .price-plan { font-size:11px; }
-      .btn-block { font-size:14px; padding:13px; }
-      .cta-box { padding:36px 18px; border-radius:24px; }
-      .cta-title { font-size:clamp(22px,7vw,36px); }
-      .cta-desc { font-size:15px; }
-      .sysreq-strip { padding:18px; }
-      .sysreq-title { font-size:18px; }
-      .req-tag { font-size:10px; padding:4px 10px; }
-      .container { padding:0 14px; }
-      .trial-strip { padding:14px 18px; font-size:13px; }
-      .nav-mobile-menu { top:72px; left:12px; right:12px; padding:16px; }
-      .sc-frame { border-radius:18px; }
-      .sc-titlebar { padding:10px 14px; }
-      .footer { padding:44px 0 24px; }
-      .footer-grid { gap:28px; }
-      .footer-brand-desc { font-size:13px; }
-      .footer-bottom { padding-top:18px; font-size:12px; }
-      .hero-badge { font-size:11px; padding:5px 13px; }
     }
   </style>
 </head>
@@ -625,16 +580,16 @@
 
 <!-- ══════════════════════ NAVBAR ══════════════════════ -->
 <nav class="navbar" id="navbar">
-  <a ="#" class="nav-logo">
+  <a href="#" class="nav-logo">
     <div class="logo-icon">CMA</div>
     <span class="logo-text">Cashier Manager App</span>
   </a>
 
   <div class="nav-links" id="nav-links-desktop">
-    <a ="#features" class="nav-link" data-key="nav_features">المميزات</a>
-    <a ="#screens"  class="nav-link" data-key="nav_screens">الشاشات</a>
-    <a ="#pricing"  class="nav-link" data-key="nav_pricing">الأسعار</a>
-    <a ="#contact"  class="nav-link" data-key="nav_contact">تواصل معنا</a>
+    <a href="#features" class="nav-link" data-key="nav_features">المميزات</a>
+    <a href="#screens"  class="nav-link" data-key="nav_screens">الشاشات</a>
+    <a href="#pricing"  class="nav-link" data-key="nav_pricing">الأسعار</a>
+    <a href="#contact"  class="nav-link" data-key="nav_contact">تواصل معنا</a>
   </div>
 
   <div class="nav-end">
@@ -642,7 +597,7 @@
       <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')">العربية</button>
       <button class="lang-btn"        id="btn-en" onclick="setLang('en')">English</button>
     </div>
-    <a ="#contact" class="btn-cta nav-cta-desktop">
+    <a href="https://wa.me/201207685559" class="btn-cta nav-cta-desktop" target="_blank" rel="noopener">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       <span data-key="nav_cta">تواصل معنا</span>
     </a>
@@ -654,10 +609,10 @@
 
 <!-- Mobile nav -->
 <div class="nav-mobile-menu" id="mobile-menu">
-  <a ="#features" class="nav-mobile-link" data-key="nav_features">المميزات</a>
-  <a ="#screens"  class="nav-mobile-link" data-key="nav_screens">الشاشات</a>
-  <a ="#pricing"  class="nav-mobile-link" data-key="nav_pricing">الأسعار</a>
-  <a ="#contact"  class="nav-mobile-link" data-key="nav_contact">تواصل معنا</a>
+  <a href="#features" class="nav-mobile-link" data-key="nav_features">المميزات</a>
+  <a href="#screens"  class="nav-mobile-link" data-key="nav_screens">الشاشات</a>
+  <a href="#pricing"  class="nav-mobile-link" data-key="nav_pricing">الأسعار</a>
+  <a href="#contact"  class="nav-mobile-link" data-key="nav_contact">تواصل معنا</a>
 </div>
 
 <!-- ══════════════════════ HERO ══════════════════════ -->
@@ -682,11 +637,11 @@
         </p>
 
         <div class="hero-actions fade-up visible" style="transition-delay:.24s">
-          <a ="https://github.com/MinaEkladios/Cashier-landing-Page/releases/download/Full_app_3_Days_trial/Cashier_Premium.zip" class="btn-cta" style="padding:13px 26px;font-size:15px" target="_blank" rel="noopener">
+          <a href="https://github.com/MinaEkladios/Cashier-landing-Page/releases/download/CashierApp/CashierApp.zip" class="btn-cta" style="padding:13px 26px;font-size:15px" target="_blank" rel="noopener">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4 4m0 0l-4-4m4 4V4"/></svg>
             <span data-key="hero_cta1">تحميل النسخة التجريبية</span>
           </a>
-          <a ="#screens" class="btn-outline" style="padding:13px 26px;font-size:15px">
+          <a href="#screens" class="btn-outline" style="padding:13px 26px;font-size:15px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
             <span data-key="hero_cta2">مشاهدة الشاشات</span>
           </a>
@@ -824,6 +779,8 @@
       <button class="sc-tab active" data-screen="dashboard" onclick="switchScreen(this,'dashboard')"><span data-key="tab_db">لوحة التحكم</span></button>
       <button class="sc-tab"        data-screen="pos"       onclick="switchScreen(this,'pos')"><span data-key="tab_pos">نقطة البيع</span></button>
       <button class="sc-tab"        data-screen="inventory" onclick="switchScreen(this,'inventory')"><span data-key="tab_inv">المخزون</span></button>
+      <button class="sc-tab"        data-screen="customers"  onclick="switchScreen(this,'customers')"><span data-key="tab_cust">العملاء</span></button>
+      <button class="sc-tab"        data-screen="costcontrol" onclick="switchScreen(this,'costcontrol')"><span data-key="tab_cost">تحكم التكاليف</span></button>
       <button class="sc-tab"        data-screen="reports"   onclick="switchScreen(this,'reports')"><span data-key="tab_rep">التقارير</span></button>
       <button class="sc-tab"        data-screen="returns"   onclick="switchScreen(this,'returns')"><span data-key="tab_ret">المرتجعات</span></button>
       <button class="sc-tab"        data-screen="settings"  onclick="switchScreen(this,'settings')"><span data-key="tab_set">الإعدادات</span></button>
@@ -877,7 +834,7 @@
         <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_alert">تنبيه مخزون (عرض فقط)</span></div>
         <div class="pf-row"><span class="pf-icon pf-no"><svg viewBox="0 0 8 8"><line x1="1" y1="1" x2="7" y2="7"/><line x1="7" y1="1" x2="1" y2="7"/></svg></span><span style="opacity:.45" data-key="pf_exp">تواريخ الصلاحية</span></div>
         <div class="pf-row"><span class="pf-icon pf-no"><svg viewBox="0 0 8 8"><line x1="1" y1="1" x2="7" y2="7"/><line x1="7" y1="1" x2="1" y2="7"/></svg></span><span style="opacity:.45" data-key="pf_mov">حركة المخزون التفصيلية</span></div>
-        <a class="btn-block bb-ghost" data-key="pl1_btn" aria-disabled="true" style="pointer-events:none;opacity:.5;cursor:not-allowed">جرب مجاناً 3 أيام</a>
+        <a href="https://github.com/MinaEkladios/Cashier-landing-Page/releases/download/CashierApp/CashierApp.zip" class="btn-block bb-ghost" data-key="pl1_btn" target="_blank" rel="noopener">جرب مجاناً 3 أيام</a>
       </div>
 
       <!-- Professional (Featured) -->
@@ -895,7 +852,7 @@
         <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_barcode">بحث باركود أونلاين</span></div>
         <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_restock">قائمة إعادة التخزين Excel</span></div>
         <div class="pf-row"><span class="pf-icon pf-yes"><svg viewBox="0 0 10 8"><polyline points="1,4 3.5,6.5 9,1"/></svg></span><span data-key="pf_reports">تقارير PDF + Excel متقدمة</span></div>
-        <a class="btn-block bb-primary" data-key="pl2_btn" aria-disabled="true" style="pointer-events:none;opacity:.5;cursor:not-allowed">اشتري الآن</a>
+        <a href="https://wa.me/201207685559" class="btn-block bb-primary" data-key="pl2_btn" target="_blank" rel="noopener">اشتري الآن</a>
       </div>
 
       <!-- Premium -->
@@ -956,8 +913,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.105.546 4.083 1.503 5.803L.057 23.196a.5.5 0 00.625.625l5.4-1.443A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9c-1.97 0-3.81-.54-5.376-1.47l-.386-.23-3.97 1.06 1.08-3.942-.252-.402A9.845 9.845 0 012.1 12C2.1 6.534 6.534 2.1 12 2.1S21.9 6.534 21.9 12 17.466 21.9 12 21.9z"/></svg>
           <span data-key="cta_wa">تواصل عبر واتساب</span>
         </a>
-        <!-- exe download link -->
-        <!-- <a href="https://github.com/MinaEkladios/Cashier-landing-Page/releases/download/Full_app_3_Days_trial/CashierApp.zip" class="btn-cta" style="padding:14px 28px;font-size:15px" target="_blank" rel="noopener"> -->
+        <a href="https://github.com/MinaEkladios/Cashier-landing-Page/releases/download/CashierApp/CashierApp.zip" class="btn-cta" style="padding:14px 28px;font-size:15px" target="_blank" rel="noopener">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4 4m0 0l-4-4m4 4V4"/></svg>
           <span data-key="cta_dl">تحميل النسخة التجريبية</span>
         </a>
@@ -1001,7 +957,7 @@
       <!-- Developer -->
       <div>
         <div class="footer-col-title" data-key="ft_dev">تطوير</div>
-        <a href="https://github.com/MinaEkladios" class="footer-link" target="_blank" rel="noopener noreferrer" style="color:var(--blue-lt)">Mina Ekladios</a>
+        <span class="footer-link" style="cursor:default">Mina Ekladios</span>
         <span class="footer-link" style="cursor:default">Developer & Designer</span>
         <a href="https://wa.me/201207685559" class="footer-link" style="color:var(--blue-lt)">WhatsApp</a>
       </div>
@@ -1077,6 +1033,12 @@ const T = {
     cap_ret_d: "استرداد أي فاتورة بالكامل أو جزئياً، مع تحديث تلقائي للمخزون والحسابات.",
     cap_set_t: "إعدادات النظام",
     cap_set_d: "تخصيص كامل للمحل والطابعات والمستخدمين وهوية الفاتورة.",
+    tab_cust: "العملاء",
+    tab_cost: "تحكم التكاليف",
+    cap_cust_t: "إدارة العملاء",
+    cap_cust_d: "قائمة العملاء، بيانات الاتصال، وسجل المبيعات لكل عميل.",
+    cap_cc_t: "تحكم وتخفيض التكاليف",
+    cap_cc_d: "أدوات لتحليل التكاليف وإدارة عروض الأسعار وتحسين هامش الربح.",
     pr_badge: "الأسعار",
     pr_title: "باقات تناسب الجميع",
     pr_desc:  "ابدأ بالتجربة المجانية، ثم اختر الباقة المناسبة. بدون رسوم خفية.",
@@ -1183,6 +1145,12 @@ const T = {
     cap_ret_d: "Recover any invoice fully or partially, with automatic inventory and account updates.",
     cap_set_t: "System Settings",
     cap_set_d: "Full customization for your store, printers, users, and invoice branding.",
+    tab_cust: "Customers",
+    tab_cost: "Cost Control",
+    cap_cust_t: "Customers Management",
+    cap_cust_d: "Customer directory, contact details, and per-customer sales history.",
+    cap_cc_t: "Cost Control",
+    cap_cc_d: "Tools for cost analysis, price adjustments, and margin improvements.",
     pr_badge: "Pricing",
     pr_title: "Plans for Every Business",
     pr_desc:  "Start with the free trial, then choose the plan that fits your business. No hidden fees.",
@@ -1252,6 +1220,16 @@ const SCREENS = {
     img_ar: 'assets/ar/Inventory-ar.jpg', img_en: 'assets/en/Inventory-en.jpg',
     win: 'Cashier Manager App · Inventory',
     t: 'cap_inv_t', d: 'cap_inv_d'
+  },
+  customers: {
+    img_ar: 'assets/ar/Customer-ar.jpg', img_en: 'assets/en/Customers-en.jpg',
+    win: 'Cashier Manager App · Customers',
+    t: 'cap_cust_t', d: 'cap_cust_d'
+  },
+  costcontrol: {
+    img_ar: 'assets/ar/Cost Control-ar.jpg', img_en: 'assets/en/Cost Control-en.jpg',
+    win: 'Cashier Manager App · Cost Control',
+    t: 'cap_cc_t', d: 'cap_cc_d'
   },
   reports: {
     img_ar: 'assets/ar/Reports-ar.jpg', img_en: 'assets/en/Reports-en.jpg',
